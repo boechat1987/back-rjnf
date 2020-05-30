@@ -29,6 +29,7 @@
     "moment": "^2.24.0",
     "mysql": "^2.18.1",
     "node-xlsx": "^0.15.0",
+    "pg": "^8.2.1",
     "underscore": "^1.10.2"
   },
   "devDependencies": {},

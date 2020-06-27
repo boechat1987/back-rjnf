@@ -7,6 +7,11 @@ const Programacao = use('App/Models/Programacao');
 const User = use('App/Models/User');
 const Ordem = use('App/Models/Ordem');
 var XLSX = require('xlsx');
+const Drive = use('Drive');
+const Helpers = use('Helpers');
+const S3 = use('App/Models/S3');
+
+const Fs = use('fs');
 
 /**
  * Resourceful controller for interacting with programacaos
@@ -114,8 +119,14 @@ class ProgramacaoController {
   async storeProg(data){
   }
 
-  async criaProg(){
-    var workbook = XLSX.readFile('C:/Users/boech/Downloads/oministack/projetoadonis/malharjnf/Programação.xlsx');
+  async criaProg({params}){
+    const {file:fileName} = params;
+    const files = Fs.readdirSync(Helpers.tmpPath('uploads'));
+    if (!files.includes(fileName)){
+      return "file not found"
+    }
+
+    var workbook = XLSX.readFile(`${Helpers.tmpPath('uploads')}/${fileName}`);
     var sheet_name_list = workbook.SheetNames;
     var z = [];
     var unparsed = [];
@@ -301,7 +312,8 @@ class ProgramacaoController {
   );
    
   }
-  
+  S3.find("name", fileName).delete();
+  Fs.unlinkSync(`${Helpers.tmpPath('uploads')}/${fileName}`);
   return parsedDataReadyToBeSaved;
   }
 }

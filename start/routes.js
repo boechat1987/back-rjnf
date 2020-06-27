@@ -15,6 +15,7 @@
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use("Route");
+const Env = use('Env');
 
 Route.post("/users/authenticate", "AuthController.login");
 
@@ -26,10 +27,14 @@ Route.get("/users", "UserController.index");
 //.middleware("auth");
 
 //Route.post('/contact', "ContactController.store")
+Route.get("/s3/:file", "S3Controller.getS3File");
+Route.post("/s3", "S3Controller.sendS3File");
+Route.get("/s3", "S3Controller.listS3Files");
+Route.post("/s3/hard", "S3Controller.saveHardCopy");
 
 Route.post('/prog/semana', "ProgramacaoController.store")
 Route.get('/prog/semana', "ProgramacaoController.index")
-Route.get('/prog', "ProgramacaoController.criaProg")
+Route.get('/prog/:file', "ProgramacaoController.criaProg")
 Route.get('/prog/semana/:id', "ProgramacaoController.show")
 Route.post('/prog/semana/:id', "ProgramacaoController.update")
 Route.delete('/prog/semana/:id', "ProgramacaoController.destroy")

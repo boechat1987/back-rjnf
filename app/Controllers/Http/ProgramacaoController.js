@@ -125,7 +125,6 @@ class ProgramacaoController {
     if (!files.includes(fileName)){
       return "file not found"
     }
-
     var workbook = XLSX.readFile(`${Helpers.tmpPath('uploads')}/${fileName}`);
     var sheet_name_list = workbook.SheetNames;
     var z = [];
@@ -278,10 +277,8 @@ class ProgramacaoController {
   for (const currentUser of parsedDataReadyToBeSaved){
     // fazer com for Of... verificar
     const {name, days} = currentUser;
-    
     const {id: user_Id} = await User.findBy('username', name);
     const semana = header["G"];
-    
     for (let day of days){
       const {fullDate: data, duties} = day;
       let result  = await Programacao.create({data, semana})
@@ -290,8 +287,9 @@ class ProgramacaoController {
           const {id: programacao_id} = result
             if (typeof numero === 'undefined'){
               numero = '0';
-            }
-          await Ordem.create({numero, text, user_Id, programacao_id});
+            } 
+            console.log({numero, text, programacao_id, user_Id,})
+          await Ordem.create({numero, text, programacao_id, user_Id,});
         }
     } 
     
@@ -312,8 +310,8 @@ class ProgramacaoController {
   );
    
   }
-  S3.find("name", fileName).delete();
-  Fs.unlinkSync(`${Helpers.tmpPath('uploads')}/${fileName}`);
+  //S3.find("name", fileName).delete();
+  //Fs.unlinkSync(`${Helpers.tmpPath('uploads')}/${fileName}`);
   return parsedDataReadyToBeSaved;
   }
 }

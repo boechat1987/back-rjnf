@@ -41,20 +41,21 @@ class S3Controller {
     }
 
     async saveHardCopy({request}){
+        const datenow = Date.now();
         const profilePic = request.file('file', {
             types: ['vnd.ms-excel','vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
             size: '10mb'
           })
         
           await profilePic.move(Helpers.tmpPath('uploads'), {
-            name: Date.now()+profilePic.clientName,
+            name: datenow+profilePic.clientName,
             overwrite: true
           })
         
           if (!profilePic.moved()) {
             return profilePic.error()
           }
-         try{ await S3.create({name:Date.now()+profilePic.clientName})}
+         try{ await S3.create({name:datenow+profilePic.clientName})}
          catch (e){
              console.log(e)
          }

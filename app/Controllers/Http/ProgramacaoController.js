@@ -287,12 +287,15 @@ class ProgramacaoController {
           const {id: programacao_id} = result
             if (typeof numero === 'undefined'){
               numero = '0';
-            } 
-            console.log({numero, text, programacao_id, user_Id,})
-          await Ordem.create({numero, text, programacao_id, user_Id,});
+            }
+          numero = parseInt(numero, 10);
+          // problemas com inteiro no progid e userid
+          //programacao_id = parseInt(programacao_id, 10);
+          //user_Id = parseInt(user_Id, 10);
+          const res = await Ordem.create({numero, text});   
+          //const res = await Ordem.create({numero, text, programacao_id, user_Id});
         }
     } 
-    
   }
 
   const finalAsString = JSON.stringify(parsedDataReadyToBeSaved);
@@ -310,8 +313,9 @@ class ProgramacaoController {
   );
    
   }
-  //S3.find("name", fileName).delete();
-  //Fs.unlinkSync(`${Helpers.tmpPath('uploads')}/${fileName}`);
+  const res2 = await S3.findBy("name" , `${fileName}`);
+  await res2.delete();
+  Fs.unlinkSync(`${Helpers.tmpPath('uploads')}/${fileName}`);
   return parsedDataReadyToBeSaved;
   }
 }

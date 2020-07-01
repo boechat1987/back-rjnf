@@ -277,7 +277,7 @@ class ProgramacaoController {
   for (const currentUser of parsedDataReadyToBeSaved){
     // fazer com for Of... verificar
     const {name, days} = currentUser;
-    const {id: user_Id} = await User.findBy('username', name);
+    const {id: user_id} = await User.findBy('username', name);
     const semana = header["G"];
     for (let day of days){
       const {fullDate: data, duties} = day;
@@ -289,12 +289,8 @@ class ProgramacaoController {
               numero = '0';
             }
           numero = parseInt(numero, 10);
-          // problemas com userid
           
-          //user_Id = parseInt(user_Id, 10);
-          //const res = await Ordem.create({numero, text});  
-          const res = await Ordem.create({numero, text, programacao_id});
-          console.log("passou por aqui")
+          const res = await Ordem.create({numero, text, programacao_id, user_id});
         }
     } 
   }

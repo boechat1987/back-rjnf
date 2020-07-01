@@ -289,11 +289,12 @@ class ProgramacaoController {
               numero = '0';
             }
           numero = parseInt(numero, 10);
-          // problemas com inteiro no progid e userid
-          //programacao_id = parseInt(programacao_id, 10);
+          // problemas com userid
+          
           //user_Id = parseInt(user_Id, 10);
-          const res = await Ordem.create({numero, text});   
-          //const res = await Ordem.create({numero, text, programacao_id, user_Id});
+          //const res = await Ordem.create({numero, text});  
+          const res = await Ordem.create({numero, text, programacao_id});
+          console.log("passou por aqui")
         }
     } 
   }

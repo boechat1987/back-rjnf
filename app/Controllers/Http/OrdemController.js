@@ -42,7 +42,7 @@ class OrdemController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
-    const data = request.only(["numero","text"])
+    const data = request.only(["numero","text","programacao_id","user_id"])
     return Ordem.create(data)
   }
 

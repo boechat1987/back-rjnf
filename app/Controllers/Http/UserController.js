@@ -9,11 +9,11 @@ class UserController {
       const messages = {
         "username.required": "Esse campo é obrigatorio",
         "username.unique": "Esse usuário já existe",
-        "username.min": "O username deve ter mais que 4 caracteres",
+        "username.min": "O username deve ter mais que 3 caracteres",
       };
 
       const rules = {
-        username: "required|min:4|unique:users",
+        username: "required|min:3|unique:users",
         email: "required|email|unique:users",
         password: "required|min:6",
       };

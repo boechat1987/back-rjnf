@@ -300,7 +300,8 @@ class ProgramacaoController {
   function ExcelDateToJSDate(serial) {
    
   var utc_days = Math.floor(serial - 25569); // converter para 1970
-  var utc_value = ((utc_days+1) * 86400); //24hrs
+  var utc_value = ((utc_days) * 86400); //24hrs rodando no servidor
+  //var utc_value = ((utc_days+1) * 86400); //24hrs rodando no pc
   var date_info = new Date(utc_value * 1000); // data em segundos
 
   return new Date(

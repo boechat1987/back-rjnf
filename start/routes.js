@@ -35,6 +35,7 @@ Route.post("/s3/hard", "S3Controller.saveHardCopy");
 Route.post('/prog/semana', "ProgramacaoController.store")
 Route.get('/prog/semana', "ProgramacaoController.index")
 Route.get('/prog/file/:file', "ProgramacaoController.criaProg")
+Route.get('/prog/semana/busca/:semana', "ProgramacaoController.showProg")
 Route.get('/prog/semana/:id', "ProgramacaoController.show")
 Route.post('/prog/semana/:id', "ProgramacaoController.update")
 Route.delete('/prog/semana/:id', "ProgramacaoController.destroy")

@@ -3,6 +3,7 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
+const Database = use('Database');
 const Programacao = use('App/Models/Programacao');
 const User = use('App/Models/User');
 const Ordem = use('App/Models/Ordem');
@@ -71,6 +72,13 @@ class ProgramacaoController {
   async show ({ params, request, response, view }) {
     const {id} = params
     return Programacao.find(id)
+  }
+
+  async showProg ({params, response}) {
+    const {semana} = params
+    return await Database
+    .table('programacaos')
+    .where('semana', `${semana}`)
   }
 
   /**
@@ -153,10 +161,8 @@ class ProgramacaoController {
     unparsed.shift();
   });
   
-
   const data = unparsed.filter(row => row);
   
-
   const header = data.shift(data);
   const calendarStart = data.shift(data); // "A": "DDS 08:30 Segunda-feira"
   const calendarDaysOfTheWeek = data.shift(data);
@@ -268,7 +274,7 @@ class ProgramacaoController {
    
   user.push(row);
   });
-
+  
   const parsedDataReadyToBeSaved = [];
   for (let item of schedule) {
     parsedDataReadyToBeSaved.push(createObject(item));
@@ -311,6 +317,7 @@ class ProgramacaoController {
   );
    
   }
+  
   const res2 = await S3.findBy("name" , `${fileName}`);
   await res2.delete();
   Fs.unlinkSync(`${Helpers.tmpPath('uploads')}/${fileName}`);

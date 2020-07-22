@@ -76,9 +76,12 @@ class ProgramacaoController {
 
   async showProg ({params, response}) {
     const {semana} = params
-    return await Database
+    const prog = await Programacao
+    .query()
     .table('programacaos')
     .where('semana', `${semana}`)
+    .fetch()
+    return prog
   }
 
   /**

@@ -19,8 +19,9 @@ const Env = use('Env');
 
 Route.post("/users/authenticate", "AuthController.login");
 
-Route.post("/users", "UserController.store")
-Route.get("/users/:id", "UserController.show");
+Route.post("/users/login", "UserController.login");
+Route.post("/users", "UserController.store");
+Route.get("/users/:id", "UserController.show")
 //.middleware("auth");
 Route.delete("/users/:id", "UserController.destroy").middleware("auth");
 Route.get("/users", "UserController.index");

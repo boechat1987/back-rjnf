@@ -4,7 +4,7 @@ const User = use("App/Models/User");
 const { validate } = use("Validator");
 
 class UserController {
-  async store({ request, response }) {
+  async store({ request, response, auth }) {
     try {
       const messages = {
         "username.required": "Esse campo é obrigatorio",
@@ -24,8 +24,9 @@ class UserController {
         return response.status(400).send({ message: validation.messages() });
       }
       const data = request.only(["username", "email", "password"]);
-
+     
       const user = await User.create(data);
+      const token = await auth.generate(user)
 
       return user;
     } catch (err) {
@@ -40,6 +41,13 @@ class UserController {
 
   async show({ params }) {
     return await User.findOrFail(params.id);
+  }
+
+  async login ({ request, response, auth }) {
+    
+    const { username, password } = request.all()
+    const token = await auth.attempt(username, password)
+    return response.status(200).send({ token, username });
   }
 
   async destroy({ params }) {

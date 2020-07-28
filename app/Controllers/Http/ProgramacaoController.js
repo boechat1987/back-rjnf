@@ -8,6 +8,7 @@ const Programacao = use('App/Models/Programacao');
 const User = use('App/Models/User');
 const Ordem = use('App/Models/Ordem');
 var XLSX = require('xlsx');
+const { isNull } = require('underscore');
 const Drive = use('Drive');
 const Helpers = use('Helpers');
 const S3 = use('App/Models/S3');
@@ -132,6 +133,7 @@ class ProgramacaoController {
 
   async criaProg({params}){
     const {file:fileName} = params;
+    
     const files = Fs.readdirSync(Helpers.tmpPath('uploads'));
     if (!files.includes(fileName)){
       return "file not found"
@@ -165,7 +167,6 @@ class ProgramacaoController {
   });
   
   const data = unparsed.filter(row => row);
-  
   const header = data.shift(data);
   const calendarStart = data.shift(data); // "A": "DDS 08:30 Segunda-feira"
   const calendarDaysOfTheWeek = data.shift(data);
@@ -286,7 +287,9 @@ class ProgramacaoController {
   for (const currentUser of parsedDataReadyToBeSaved){
     // fazer com for Of... verificar
     const {name, days} = currentUser;
-    const {id: user_id} = await User.findBy('username', name);
+    //preciso corrigir essa linha user_id pode não estar lá
+    const foundUser = await User.findBy('username', name);
+    
     const semana = header["G"];
     for (let day of days){
       const {fullDate: data, duties} = day;
@@ -299,7 +302,14 @@ class ProgramacaoController {
             }
           numero = parseInt(numero, 10);
           
-          const res = await Ordem.create({numero, text, programacao_id, user_id});
+          if (foundUser !== null){
+            const {id: user_id} = foundUser;
+            console.log(user_id)
+            const res = await Ordem.create({numero, text, programacao_id, user_id});
+          }
+          else{
+            const res = await Ordem.create({numero, text, programacao_id});
+          }
         }
     } 
   }

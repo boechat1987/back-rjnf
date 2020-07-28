@@ -42,16 +42,16 @@ class S3Controller {
 
     async saveHardCopy({request}){
         const datenow = Date.now();
+        
         const profilePic = request.file('file', {
-            types: ['vnd.ms-excel','vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+            types: ['octet-stream','vnd.ms-excel','vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
             size: '10mb'
           })
-        
           await profilePic.move(Helpers.tmpPath('uploads'), {
             name: datenow+profilePic.clientName,
             overwrite: true
           })
-        
+          
           if (!profilePic.moved()) {
             return profilePic.error()
           }

@@ -1,5 +1,5 @@
 "use strict";
-
+const Token = use("App/Models/Token");
 const User = use("App/Models/User");
 const { validate } = use("Validator");
 
@@ -27,7 +27,7 @@ class UserController {
      
       const user = await User.create(data);
       const token = await auth.generate(user)
-
+      
       return user;
     } catch (err) {
       console.log(err);

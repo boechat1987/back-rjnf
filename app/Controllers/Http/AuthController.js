@@ -3,15 +3,14 @@ const User = use("App/Models/User");
 
 class AuthController {
   async login({ request, auth, response }) {
-    let { username, password } = request.all();
-
+    let { users} = request.all();
     try {
-      if (await auth.attempt(username, password)) {
-        let user = await User.findBy("username", username);
-        let token = await auth.generate(user);
+      if (await auth.attempt(users.username, users.password)) {
+        let user = await User.findBy("username", users.username);
+        let accessToken = await auth.generate(user);
 
-        Object.assign(user, token);
-        return response.json(user);
+        Object.assign(user, accessToken);
+        return response.json({"user":user, "access_token": accessToken});
       }
     } catch (e) {
      // return response.unauthorized("You are not registered!");

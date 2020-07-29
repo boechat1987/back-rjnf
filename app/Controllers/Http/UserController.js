@@ -24,11 +24,9 @@ class UserController {
         return response.status(400).send({ message: validation.messages() });
       }
       const data = request.only(["username", "email", "password"]);
-     
       const user = await User.create(data);
-      const token = await auth.generate(user)
-      
-      return user;
+      let accessToken = await auth.generate(user)
+      return response.json({"user": user, "access_token": accessToken});
     } catch (err) {
       console.log(err);
       return response.status(err.status).send(err);
@@ -43,12 +41,38 @@ class UserController {
     return await User.findOrFail(params.id);
   }
 
-  async login ({ request, response, auth }) {
-    
-    const { username, password } = request.all()
-    const token = await auth.attempt(username, password)
-    return response.status(200).send({ token, username });
+  async login ({ request, auth, response }) {
+   const { username, password } = request.all()
+   
+    try {
+      if (await auth.attempt(username, password)) {
+        let user = await User.findBy('username', username)
+        let token = await auth.generate(user)
+        user.password = undefined
+        Object.assign(user, token)
+        //------------------------------------------
+        try{
+        const assignedToken = await Token.create({
+          user_id: user.id,
+          token,
+        })
+      } catch (error){
+        return error
+        }
+        // -------- i'd like to catch exception here...
+        return response.json({
+          success: true,
+          user
+        })
+      }
+    } catch(e) {
+        return response.json({
+          success: false,
+          message: 'login_failed'
+        })
+    }
   }
+  
 
   async destroy({ params }) {
     const user = await User.findOrFail(params.id);

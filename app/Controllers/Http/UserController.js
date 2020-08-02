@@ -37,13 +37,18 @@ class UserController {
     return await User.all();
   }
 
-  async show({ params }) {
-    return await User.findOrFail(params.id);
+  async show({auth, params }) {
+    if (auth.user.id !== Number(params.id)) {
+      return "Não é o seu profile"
+    }
+    return auth.user
+    //return await User.findOrFail(params.id);
   }
+    
+  
 
   async login ({ request, auth, response }) {
-   const { username, password } = request.all()
-   
+   /* const { username, password } = request.all()
     try {
       if (await auth.attempt(username, password)) {
         let user = await User.findBy('username', username)
@@ -59,7 +64,7 @@ class UserController {
       } catch (error){
         return error
         }
-        // -------- i'd like to catch exception here...
+        
         return response.json({
           success: true,
           user
@@ -70,9 +75,15 @@ class UserController {
           success: false,
           message: 'login_failed'
         })
+    } */
+  }
+  async login ({ request, auth, response }) {
+    try {
+      return await auth.getUser()
+    } catch (error) {
+      response.send('Missing or invalid jwt token')
     }
   }
-  
 
   async destroy({ params }) {
     const user = await User.findOrFail(params.id);

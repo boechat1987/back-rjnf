@@ -15,7 +15,7 @@ class AuthController {
     } catch (e) {
      // return response.unauthorized("You are not registered!");
      return response.status(401).json({
-       name: username,
+       name: users.username,
        message: "nao autorizado"
        //name: e.name,
        //message: e.message

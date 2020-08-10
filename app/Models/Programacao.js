@@ -4,7 +4,12 @@
 const Model = use('Model');
 
 class Programacao extends Model { 
-    programacaos () {
+  
+  ordems () {
+    return this.hasMany('App/Models/Ordem')
+  }
+
+  programacaos () {
         return this.hasMany('App/Models/Programacao')
       }   
 }

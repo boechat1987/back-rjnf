@@ -133,7 +133,6 @@ class ProgramacaoController {
 
   async criaProg({params}){
     const {file:fileName} = params;
-    
     const files = Fs.readdirSync(Helpers.tmpPath('uploads'));
     if (!files.includes(fileName)){
       return "file not found"
@@ -165,7 +164,6 @@ class ProgramacaoController {
     //drop those first row which are empty
     unparsed.shift();
   });
-  
   const data = unparsed.filter(row => row);
   const header = data.shift(data);
   const calendarStart = data.shift(data); // "A": "DDS 08:30 Segunda-feira"
@@ -261,7 +259,6 @@ class ProgramacaoController {
       duties: getServices(data, "N", "O")
     }
   ];
-
   return user;
   };
 
@@ -280,6 +277,7 @@ class ProgramacaoController {
   });
   
   const parsedDataReadyToBeSaved = [];
+  
   for (let item of schedule) {
     parsedDataReadyToBeSaved.push(createObject(item));
   }
@@ -304,7 +302,6 @@ class ProgramacaoController {
           
           if (foundUser !== null){
             const {id: user_id} = foundUser;
-            console.log(user_id)
             const res = await Ordem.create({numero, text, programacao_id, user_id});
           }
           else{

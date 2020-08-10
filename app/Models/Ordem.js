@@ -12,6 +12,10 @@ class Ordem extends Model {
     ordems () {
         return this.hasMany('App/Models/Ordem')
     }
+
+    users () {
+        return this.hasMany('App/Models/User')
+    }
 }
 
 module.exports = Ordem

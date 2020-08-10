@@ -4,6 +4,8 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 const Ordem = use('App/Models/Ordem')
+const Programacao = use('App/Models/Programacao');
+const User = use('App/Models/User');
 /**
  * Resourceful controller for interacting with ordems
  */
@@ -96,7 +98,21 @@ class OrdemController {
     const os = await Ordem.findOrFail(id)
     return os.delete()
   }
-  
+
+  async showOrdemDate ({params, request, response}) {
+   // const {user_id, semana} = params
+   const {semana} = params
+   const data = request.only(["user_id"])
+   const users = await Programacao
+  .query()
+  .where('semana', `${semana}`)
+  .with('ordems', (builder) => {
+    builder.where('user_id', `${data.user_id}`)
+  })
+  .fetch()
+    return users
+  }
+
 }
 
 module.exports = OrdemController

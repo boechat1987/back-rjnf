@@ -40,6 +40,7 @@ Route.get('/prog/semana/:id', "ProgramacaoController.show")
 Route.post('/prog/semana/:id', "ProgramacaoController.update")
 Route.delete('/prog/semana/:id', "ProgramacaoController.destroy")
 
+Route.get('/prog/ordem/busca/:semana', "OrdemController.showOrdemDate")
 Route.post('/prog/ordem', "OrdemController.store")
 Route.get('/prog/ordem', "OrdemController.index")
 Route.get('/prog/ordem/:id', "OrdemController.show")

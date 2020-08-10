@@ -8,7 +8,7 @@ class OrdemSchema extends Schema {
     this.create('ordems', (table) => {
       table.increments()
       table.integer('numero', 8).notNullable()
-      table.string('text', 80).notNullable()
+      table.string('text', 250).notNullable()
       table.integer('programacao_id').unsigned().references('id').inTable('programacaos')
       table.integer('user_id').unsigned().references('id').inTable('users')
      // table.integer('local_id').unsigned().references('id').inTable('locals')

@@ -32,6 +32,11 @@ Route.post("/s3", "S3Controller.sendS3File");
 Route.get("/s3", "S3Controller.listS3Files");
 Route.post("/s3/hard", "S3Controller.saveHardCopy");
 
+Route.get("/sdrop/:file", "SdropController.getSdropFile");
+Route.post("/sdrop", "SdropController.sendSdropFile");
+Route.get("/sdrop", "SdropController.listSdropFiles");
+Route.post("/sdrop/hard", "SdropController.saveHardCopy");
+
 Route.post('/prog/semana', "ProgramacaoController.store")
 Route.get('/prog/semana', "ProgramacaoController.index")
 Route.get('/prog/file/:file', "ProgramacaoController.criaProg")
@@ -52,6 +57,9 @@ Route.get('/prog/local', "LocalController.index")
 Route.get('/prog/local/:id', "LocalController.show")
 Route.post('/prog/local/:id', "LocalController.update")
 Route.delete('/prog/local/:id', "LocalController.destroy")
+
+Route.get('/prog/sobreaviso', "SobreavisoController.index")
+Route.get('/prog/sobreaviso/file/:file', "SobreavisoController.criaSobreaviso")
 
 Route.get("/", () => {
 

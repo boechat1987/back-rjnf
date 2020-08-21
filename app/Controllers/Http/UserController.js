@@ -15,7 +15,7 @@ class UserController {
       const rules = {
         username: "required|min:3|unique:users",
         email: "required|email|unique:users",
-        password: "required|min:6",
+        password: "required|min:4",
       };
 
       const validation = await validate(request.all(), rules, messages);

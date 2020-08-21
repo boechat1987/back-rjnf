@@ -9,6 +9,7 @@ class OrdemSchema extends Schema {
       table.increments()
       table.integer('numero', 8).notNullable()
       table.string('text', 250).notNullable()
+      table.string('numero_extra', 250)
       table.integer('programacao_id').unsigned().references('id').inTable('programacaos')
       table.integer('user_id').unsigned().references('id').inTable('users')
      // table.integer('local_id').unsigned().references('id').inTable('locals')

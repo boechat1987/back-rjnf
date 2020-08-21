@@ -172,7 +172,7 @@ class ProgramacaoController {
   
   const index = data.findIndex(row => {
     if (row && row["A"]) {
-      return row["A"] === "PROGRAMAÇÃO  DE MOTORISTAS"; // ta procurando todos A sozinhos? desse jeito nao era pra pegar todos A da lista e ficar retornando programacao de motoristas?
+      return row["A"] === "PROGRAMAÇÃO  DE MOTORISTAS";
     }
     return false;
     });
@@ -191,6 +191,12 @@ class ProgramacaoController {
           } else if (item[firstColumn]) {
             res.push({ description: item[firstColumn] });
             }
+            else if (item[firstColumn] === undefined && item[secondColumn] != undefined) {
+              res.push({
+                description: "0",
+                serviceOrder: item[secondColumn]
+              });
+              }
         } else {
           if (item[firstColumn]) {
             res.push({ description: item[firstColumn] });
@@ -298,14 +304,24 @@ class ProgramacaoController {
             if (typeof numero === 'undefined'){
               numero = '0';
             }
+          //pegar as OS´s excedentes
+          let numeroParsedToString = numero.toString();
+          let totalCaracteres = numeroParsedToString.length;
+          let numero_extra = null;
+            if (totalCaracteres > 8){
+             numeroParsedToString = numeroParsedToString.trim();
+             numeroParsedToString = numeroParsedToString.replace(/\s/g,'');
+             numero_extra = numeroParsedToString.slice(8,numeroParsedToString.length);
+            }
+          
           numero = parseInt(numero, 10);
           
           if (foundUser !== null){
             const {id: user_id} = foundUser;
-            const res = await Ordem.create({numero, text, programacao_id, user_id});
+            const res = await Ordem.create({numero, text, programacao_id, user_id, numero_extra});
           }
           else{
-            const res = await Ordem.create({numero, text, programacao_id});
+            const res = await Ordem.create({numero, text, programacao_id, numero_extra});
           }
         }
     } 

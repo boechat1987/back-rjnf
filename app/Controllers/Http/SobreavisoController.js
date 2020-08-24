@@ -59,8 +59,19 @@ class SobreavisoController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
+    const {id} = params
+    return Sobreaviso.find(id)
   }
 
+  async showSobreaviso ({params, request, response}) {
+    const {date} = request.only(["date"])
+    const sobreavisoResponse = await Sobreaviso
+    .query()
+    .table('sobreavisos')
+    .where('date', `${date}`)
+    .fetch()
+    return sobreavisoResponse
+  }
   /**
    * Render a form to update an existing sobreaviso.
    * GET sobreavisos/:id/edit

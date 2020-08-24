@@ -153,10 +153,9 @@ class SobreavisoController {
               AreaDois: item[fifthColumn],
               AreaSete: item[sixthColumn],
             });
-          } 
-          
+          }         
       }
-      
+/*       console.log(res) */
   return res;
   };
 
@@ -166,13 +165,11 @@ class SobreavisoController {
     }
   return string;
   }; */
-
   const createObject = data => {
   let user = {};
-  
-  user["sobreaviso"] = getServices(data, "A","B","C","D","E","F");
-    
-  return user;
+  /* const month = calendarDaysOfTheWeek["B"]; */
+   user = getServices(data, "A","B","C","D","E","F");
+   return user;
   };
 
   let schedule = [];
@@ -180,72 +177,48 @@ class SobreavisoController {
   let count = 1;
 
   data.forEach(row => {
-    if (row["A"] === count) {
-     if (user.length > 0) {
-      schedule.push(user);
-     }
     user = [];
+    if (row["A"] === count) {
+    schedule.push(user);
     count +=1
     }
-   
   user.push(row);
   });
-  
   const parsedDataReadyToBeSaved = [];
-  
   for (let item of schedule) {
     parsedDataReadyToBeSaved.push(createObject(item));
   }
-console.log('parsed: ', parsedDataReadyToBeSaved)
-  /* for (const currentUser of parsedDataReadyToBeSaved){
-    // fazer com for Of... verificar
-    const {name, days} = currentUser;
-    //preciso corrigir essa linha user_id pode não estar lá
-    const foundUser = await User.findBy('username', name);
-    
-    const semana = header["G"];
-    for (let day of days){
-      const {fullDate: data, duties} = day;
-      let result  = await Programacao.create({data, semana})
-        for (const duty of duties){
-          let {description: text, serviceOrder: numero} = duty;
-          const {id: programacao_id} = result
-            if (typeof numero === 'undefined'){
-              numero = '0';
-            }
-          numero = parseInt(numero, 10);
-          
-          if (foundUser !== null){
-            const {id: user_id} = foundUser;
-            const res = await Ordem.create({numero, text, programacao_id, user_id});
-          }
-          else{
-            const res = await Ordem.create({numero, text, programacao_id});
-          }
-        }
-    } 
-  } */
+/* console.log('parsed: ', parsedDataReadyToBeSaved) */
+   for (const currentUser of parsedDataReadyToBeSaved){
+    const year = calendarStart["B"];
+    let month = null;
+    if (calendarDaysOfTheWeek["B"] === "Agosto"){month = "08"}
+    else if (calendarDaysOfTheWeek["B"] === "Setembro"){month = "09"}
+    else if (calendarDaysOfTheWeek["B"] === "Outubro"){month = "10"}
+    else if (calendarDaysOfTheWeek["B"] === "Novembro"){month = "11"}
+    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "12"}
+    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "01"}
+    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "02"}
+    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "03"}
+    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "04"}
+    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "05"}
+    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "06"}
+    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "07"}
+    const day = currentUser[0].Dia
+    const totalHoras = currentUser[0].TotalHoras
+    const tecAreaUm = currentUser[0].AreaUm
+    const tecAreaDois = currentUser[0].AreaDois
+    const tecAreaSete = currentUser[0].AreaSete
+    const date = day+"/"+month+"/"+year;
+    //falta pegar os telefones dos tecnicos na planilha
+    let result  = await Sobreaviso.create({date, totalHoras, tecAreaUm, tecAreaDois, tecAreaSete})
+  } 
 
   const finalAsString = JSON.stringify(parsedDataReadyToBeSaved);
-
-  function ExcelDateToJSDate(serial) {
-   
-  var utc_days = Math.floor(serial - 25569); // converter para 1970
-  var utc_value = ((utc_days) * 86400); //24hrs rodando no servidor
-  //var utc_value = ((utc_days+1) * 86400); //24hrs rodando no pc
-  var date_info = new Date(utc_value * 1000); // data em segundos
-
-  return new Date(
-    date_info.getFullYear(),
-    date_info.getMonth(),
-    date_info.getDate(),
-  );
-   
-  }
   
-  /* const res2 = await Sdrop.findBy("name" , `${fileName}`);
+  const res2 = await Sdrop.findBy("name" , `${fileName}`);
   await res2.delete();
-  Fs.unlinkSync(`${Helpers.tmpPath('uploads')}/${fileName}`); */
+  Fs.unlinkSync(`${Helpers.tmpPath('uploads')}/${fileName}`);
   return parsedDataReadyToBeSaved;
   }
 

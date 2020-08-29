@@ -8,7 +8,7 @@ const Programacao = use('App/Models/Programacao');
 const User = use('App/Models/User');
 const Ordem = use('App/Models/Ordem');
 var XLSX = require('xlsx');
-const { isNull } = require('underscore');
+const { isNull, forEach } = require('underscore');
 const Drive = use('Drive');
 const Helpers = use('Helpers');
 const S3 = use('App/Models/S3');
@@ -132,6 +132,7 @@ class ProgramacaoController {
   }
 
   async criaProg({params}){
+    
     const {file:fileName} = params;
     const files = Fs.readdirSync(Helpers.tmpPath('uploads'));
     if (!files.includes(fileName)){
@@ -207,6 +208,66 @@ class ProgramacaoController {
   return res;
   };
 
+  const getLocal = (data, firstColumn) => {
+    let res = [];
+      for (let item of data) {
+        if (item["A"] === "Local") {
+          if (firstColumn) {
+            if (item[firstColumn]) {
+              res.push({
+                whereToGo: item[firstColumn],
+              });
+            }
+          } else {
+              res.push({ 
+                whereToGo: null, 
+              });
+            }
+        }
+      }
+    return res;
+    };
+
+    const getTransporte = (data, firstColumn) => {
+      let res = [];
+        for (let item of data) {
+          if (item["A"] === "Apoio / Motorista") {
+            if (firstColumn) {
+              if (item[firstColumn]) {
+                res.push({
+                  transporte: item[firstColumn],
+                });
+              }
+            } else {
+                res.push({ 
+                  transporte: null, 
+                });
+              }
+          }
+        }
+      return res;
+      };
+
+      const getApoio = (data, firstColumn) => {
+        let res = [];
+          for (let item of data) {
+            if (item["A"] === "Apoio / Motorista") {
+              if (firstColumn) {
+                if (item[firstColumn]) {
+                  res.push({
+                    apoio: item[firstColumn],
+                  });
+                }
+              } else {
+                  res.push({ 
+                    apoio: null, 
+                  });
+                }
+            }
+          }
+        return res;
+        };
+        
   const trimString = string => {
     if (typeof string === "string") {
       return string.trim();
@@ -226,43 +287,64 @@ class ProgramacaoController {
       day: 1,
       dayOfTheWeek: calendarDaysOfTheWeek["B"],
       fullDate: ExcelDateToJSDate(calendarDate["B"]),
-      duties: getServices(data, "B", "C")
+      duties: getServices(data, "B", "C"),
+      local: getLocal(data,"B"),
+      transporte: getTransporte(data,"C"),
+      apoio: getApoio(data,"B"),
     },
     {
       day: 2,
       dayOfTheWeek: calendarDaysOfTheWeek["D"],
       fullDate: ExcelDateToJSDate(calendarDate["D"]),
-      duties: getServices(data, "D", "E")
+      duties: getServices(data, "D", "E"),
+      local: getLocal(data,"D"),
+      transporte: getTransporte(data,"E"),
+      apoio: getApoio(data,"D"),
     },
     {
       day: 3,
       dayOfTheWeek: calendarDaysOfTheWeek["F"],
       fullDate: ExcelDateToJSDate(calendarDate["F"]),
-      duties: getServices(data, "F", "G")
+      duties: getServices(data, "F", "G"),
+      local: getLocal(data,"F"),
+      transporte: getTransporte(data,"G"),
+      apoio: getApoio(data,"F"),
     },
     {
       day: 4,
       dayOfTheWeek: calendarDaysOfTheWeek["H"],
       fullDate: ExcelDateToJSDate(calendarDate["H"]),
-      duties: getServices(data, "H", "I")
+      duties: getServices(data, "H", "I"),
+      local: getLocal(data,"H"),
+      transporte: getTransporte(data,"I"),
+      apoio: getApoio(data,"H"),
     },
     {
       day: 5,
       dayOfTheWeek: calendarDaysOfTheWeek["J"],
       fullDate: ExcelDateToJSDate(calendarDate["J"]),
-      duties: getServices(data, "J", "K")
+      duties: getServices(data, "J", "K"),
+      local: getLocal(data,"J"),
+      transporte: getTransporte(data,"K"),
+      apoio: getApoio(data,"J"),
     },
     {
       day: 6,
       dayOfTheWeek: calendarDaysOfTheWeek["L"],
       fullDate: ExcelDateToJSDate(calendarDate["L"]),
-      duties: getServices(data, "L", "M")
+      duties: getServices(data, "L", "M"),
+      local: getLocal(data,"L"),
+      transporte: getTransporte(data,"M"),
+      apoio: getApoio(data,"L"),
     },
     {
       day: 7,
       dayOfTheWeek: calendarDaysOfTheWeek["N"],
       fullDate: ExcelDateToJSDate(calendarDate["N"]),
-      duties: getServices(data, "N", "O")
+      duties: getServices(data, "N", "O"),
+      local: getLocal(data,"N"),
+      transporte: getTransporte(data,"O"),
+      apoio: getApoio(data,"N"),
     }
   ];
   return user;
@@ -293,11 +375,36 @@ class ProgramacaoController {
     const {name, days} = currentUser;
     //preciso corrigir essa linha user_id pode não estar lá
     const foundUser = await User.findBy('username', name);
-    
+    let local = 0; let transporte = 0; let apoio = 0;
     const semana = header["G"];
     for (let day of days){
-      const {fullDate: data, duties} = day;
-      let result  = await Programacao.create({data, semana})
+      const {fullDate: data, duties, local: locals, transporte: transportes, apoio: apoios} = day;
+      //adicionar na programação, local,transporte e apoio, falta migrar também
+      for (let localiza of locals){
+        if(localiza.whereToGo.length>0){
+        local = localiza.whereToGo}
+        else{
+          local = null;
+        }
+      }
+
+      for (let localiza of transportes){
+        if(localiza.transporte.length>0){
+        transporte = localiza.transporte}
+        else{
+          transporte = null;
+        }
+      }
+
+      for (let localiza of apoios){
+        if(localiza.apoio.length>0){
+        apoio = localiza.apoio}
+        else{
+          apoio = null;
+        }
+      }
+
+      let result  = await Programacao.create({data, semana, local, transporte, apoio})
         for (const duty of duties){
           let {description: text, serviceOrder: numero} = duty;
           const {id: programacao_id} = result

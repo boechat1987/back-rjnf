@@ -218,9 +218,14 @@ class ProgramacaoController {
                 whereToGo: item[firstColumn],
               });
             }
+            else if (item[firstColumn] === undefined){
+              res.push({ 
+                whereToGo: "0", 
+              });
+            }
           } else {
               res.push({ 
-                whereToGo: null, 
+                whereToGo: "0", 
               });
             }
         }
@@ -238,9 +243,14 @@ class ProgramacaoController {
                   transporte: item[firstColumn],
                 });
               }
+              else if (item[firstColumn] === undefined){
+                res.push({ 
+                  transporte: "0", 
+                });
+              }
             } else {
                 res.push({ 
-                  transporte: null, 
+                  transporte: "0", 
                 });
               }
           }
@@ -258,9 +268,14 @@ class ProgramacaoController {
                     apoio: item[firstColumn],
                   });
                 }
+                else if (item[firstColumn] === undefined){
+                  res.push({ 
+                    apoio: "0", 
+                  });
+                }
               } else {
                   res.push({ 
-                    apoio: null, 
+                    apoio: "0", 
                   });
                 }
             }
@@ -375,32 +390,36 @@ class ProgramacaoController {
     const {name, days} = currentUser;
     //preciso corrigir essa linha user_id pode não estar lá
     const foundUser = await User.findBy('username', name);
-    let local = 0; let transporte = 0; let apoio = 0;
+    let local = "0"; let transporte = "0"; let apoio = "0";
     const semana = header["G"];
     for (let day of days){
       const {fullDate: data, duties, local: locals, transporte: transportes, apoio: apoios} = day;
-      //adicionar na programação, local,transporte e apoio, falta migrar também
+      //acertar local e transporte duplicado
       for (let localiza of locals){
-        if(localiza.whereToGo.length>0){
-        local = localiza.whereToGo}
+        /* console.log("localiza.whereToGo:", localiza.whereToGo) */
+        if(localiza.whereToGo !== "0"){
+        local = localiza.whereToGo
+        /*  console.log("print local:", local)  */
+        }
         else{
-          local = null;
+          local = "0";
+          /*  console.log("print else local:", local)  */
         }
       }
 
       for (let localiza of transportes){
-        if(localiza.transporte.length>0){
+        if(localiza.transporte !== "0"){
         transporte = localiza.transporte}
         else{
-          transporte = null;
+          transporte = "0";
         }
       }
 
       for (let localiza of apoios){
-        if(localiza.apoio.length>0){
+        if(localiza.apoio !== "0"){
         apoio = localiza.apoio}
         else{
-          apoio = null;
+          apoio = "0";
         }
       }
 

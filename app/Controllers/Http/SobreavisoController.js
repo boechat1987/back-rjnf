@@ -7,6 +7,7 @@ const Drive = use('Drive');
 const Helpers = use('Helpers');
 const Sdrop = use('App/Models/Sdrop');
 var XLSX = require('xlsx');
+const { values } = require('underscore');
 const Fs = use('fs');
 const Sobreaviso = use('App/Models/Sobreaviso');
 /**
@@ -215,7 +216,12 @@ class SobreavisoController {
     else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "05"}
     else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "06"}
     else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "07"}
-    const day = currentUser[0].Dia
+    let day = currentUser[0].Dia
+  
+    if (day > 0 && day < 10){
+      day = '0' + day.toString();
+      } 
+      
     const totalHoras = currentUser[0].TotalHoras
     const tecAreaUm = currentUser[0].AreaUm
     const tecAreaDois = currentUser[0].AreaDois

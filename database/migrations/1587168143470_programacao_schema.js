@@ -12,6 +12,7 @@ class ProgramacaoSchema extends Schema {
       table.string('local', 250)
       table.string('transporte', 250)
       table.string('apoio', 250)
+      table.string('apontamento', 250)
       table.timestamp("created_at").defaultTo(this.fn.now())
       table.timestamp("updated_at").defaultTo(this.fn.now())
     })

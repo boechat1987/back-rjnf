@@ -75,14 +75,76 @@ class ProgramacaoController {
     return Programacao.find(id)
   }
 
+  async showStatusApontamento ({ params}) {
+    const {id} = params
+    const prog = await Programacao.find(id)
+    return prog
+  }
+
   async showProg ({params, response}) {
     const {semana} = params
     const prog = await Programacao
     .query()
     .table('programacaos')
     .where('semana', `${semana}`)
+    .with('ordems')
     .fetch()
     return prog
+  }
+
+  async showProgWithoutOrdem ({params, request}) {
+    //precisa de mais informação da ordem para quando atualizar e for diferente não cagar o banco de dados
+    const {semana} = params
+    const data = request.only(["off_set", "limit"])
+    const off_set_parsed = parseInt(data.off_set)
+    const limit_parsed = parseInt(data.limit)
+    const prog = await Programacao
+    .query()
+    .table('programacaos')
+    .where('semana', `${semana}`)
+    .orderBy('programacaos.id', 'desc')
+    .offset(off_set_parsed)
+    .limit(limit_parsed)
+    .fetch()
+
+    return prog
+  }
+
+  async showProgDoDia ({params, request}) {
+    const {data} = params
+    const user = request.only(["user_id"])
+    const prog = await Programacao
+    .query()
+    .table('programacaos')
+    .where('data', `${data}`)
+    .innerJoin('ordems', 'programacaos.id','ordems.programacao_id')
+    .where('user_id', `${user.user_id}`)
+    .orderBy('programacaos.id', 'desc')
+    .fetch()
+    return prog
+  }
+
+  async updateProgApontByLastUpload ({params, request}) {
+    const data = request.only(["apontamentoOld"])
+    //precisa testar no servidor oficial
+     for (let value of data.apontamentoOld){
+      const idPlus = value.id + 112;
+      const prog = await Programacao.findOrFail(idPlus)
+      prog.apontamento = value.apontamento
+      prog.save()
+       /* console.log("valor old", value.id)
+       console.log("valor novo", idPlus) */
+    } 
+
+    return "realizado atualização dos apontamentos"
+  }
+
+  async updateProgApontByDate ({params, request}) {
+    const {id} = params
+    const data = request.only(["apontamento"])
+    const prog = await Programacao.findOrFail(id)
+    prog.apontamento = data.apontamento
+    return prog.save()
   }
 
   /**

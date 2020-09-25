@@ -209,13 +209,13 @@ class SobreavisoController {
     else if (calendarDaysOfTheWeek["B"] === "Outubro"){month = "10"}
     else if (calendarDaysOfTheWeek["B"] === "Novembro"){month = "11"}
     else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "12"}
-    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "01"}
-    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "02"}
-    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "03"}
-    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "04"}
-    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "05"}
-    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "06"}
-    else if (calendarDaysOfTheWeek["B"] === "Dezembro"){month = "07"}
+    else if (calendarDaysOfTheWeek["B"] === "Janeiro"){month = "01"}
+    else if (calendarDaysOfTheWeek["B"] === "Fevereiro"){month = "02"}
+    else if (calendarDaysOfTheWeek["B"] === "Março"){month = "03"}
+    else if (calendarDaysOfTheWeek["B"] === "Abril"){month = "04"}
+    else if (calendarDaysOfTheWeek["B"] === "Maio"){month = "05"}
+    else if (calendarDaysOfTheWeek["B"] === "Junho"){month = "06"}
+    else if (calendarDaysOfTheWeek["B"] === "Julho"){month = "07"}
     let day = currentUser[0].Dia
   
     if (day > 0 && day < 10){

@@ -73,6 +73,33 @@ class SobreavisoController {
     .fetch()
     return sobreavisoResponse
   }
+
+  /* async showSobreavisoByMonth ({request}) {
+    const {dateYear, dateMonth, dateLastDay} = request.only(["dateYear", "dateMonth", "dateLastDay"])
+    const dateStartDay = "01";
+    const addZeroAtMoth = "0"
+    let dateMonthParsed = "";
+    if (dateMonth >=0 && dateMonth <=8 ){
+     const aux = (dateMonth + 1).toString()
+     dateMonthParsed = addZeroAtMoth+ aux;  
+    }
+    else{
+     dateMonthParsed = (dateMonth + 1).toString();
+    }
+    const dateLastDayParsed = dateLastDay.toString();
+    console.log(dateYear.toString())
+    const dateInicial = dateStartDay + "/" + dateMonthParsed + "/" + dateYear.toString();
+    const dateFinal = dateLastDayParsed + "/" + dateMonthParsed + "/"  + dateYear.toString();
+    console.log(dateInicial, dateFinal)
+    if(dateLastDay = 30){
+    const sobreavisoResponse = await Sobreaviso
+    .query()
+    .table('sobreavisos')
+    .whereIn('date', [`${dateInicial}`,`${dateFinal}` ])
+    .fetch()
+    return sobreavisoResponse}
+  } */
+
   /**
    * Render a form to update an existing sobreaviso.
    * GET sobreavisos/:id/edit

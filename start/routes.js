@@ -66,6 +66,7 @@ Route.delete('/prog/local/:id', "LocalController.destroy")
 Route.get('/prog/sobreaviso', "SobreavisoController.index")
 Route.get('/prog/sobreaviso/:id', "SobreavisoController.show")
 Route.get('/prog/sobreaviso/busca/data', "SobreavisoController.showSobreaviso")
+/* Route.get('/prog/sobreaviso/busca/mes', "SobreavisoController.showSobreavisoByMonth") */
 Route.get('/prog/sobreaviso/file/:file', "SobreavisoController.criaSobreaviso")
 
 Route.get("/", () => {
